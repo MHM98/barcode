@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:3154@localhost:3306/Jcommerce"
+}
+
+model User {
+  User_Id Int @id @default(autoincrement()) @unique
+  FirstName String? 
+  LastName String? 
+  PhoneNumber String @unique
+  Email String?
+  Admin Boolean @default(false)
+  Code String?
+
+  Orders Order[]
+}
+
+model Product {
+  Product_Id Int @id @default(autoincrement()) @unique 
+  Name String @unique
+  Description String @db.VarChar(2000)
+  Image String
+  Price Int
+  PriceWithUs Int
+  Link String @unique
+  Posts String
+  Followers String
+  Following String
+  NumericPosts Int
+  NumericFollowers Int
+  NumericFollowing Int
+
+  Category Category @relation(fields: [CategoryId], references: [Category_Id])
+  CategoryId Int
+  Orders Order[]
+}
+
+model Category {
+  Category_Id Int @id @default(autoincrement()) @unique
+  Name String
+  Image String
+  Product Product[] 
+}
+
+model Order {
+  Order_Id Int @id @default(autoincrement()) @unique
+  Status String @default("pending")
+
+  Product  Product @relation(fields: [ProductId], references: [Product_Id])
+  ProductId Int
+  User User @relation(fields:[UserId],references:[User_Id]) 
+  UserId Int
+}
